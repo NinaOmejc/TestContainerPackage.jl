@@ -1,0 +1,55 @@
+BootStrap: docker
+From: julia:1.11.4
+
+%post
+
+    # Install system dependencies
+    apt-get update && apt-get install -y git
+    rm -rf /var/lib/apt/lists/*
+
+    # Set up Julia environment for custom depot path
+    mkdir -p /opt/juliadepot
+    export JULIA_DEPOT_PATH=/opt/juliadepot
+ 
+    # Clone your custom package (adjust the URL to your actual package repository)
+    cd /opt && git clone https://github.com/NinaOmejc/TestContainerPackage.jl
+
+    # List the contents of /opt to ensure the package is cloned
+    ls /opt
+
+    # Precompile and install additional packages, e.g., JSON
+    julia -e 'using Pkg; Pkg.add(path="/opt/TestContainerPackage.jl"); Pkg.precompile()'
+
+    # Remove system dependencies that are not needed at runtime to reduce container size
+    apt-get remove -y git
+    rm -rf /var/lib/apt/lists/*  # Clean up unnecessary package lists
+
+    # Ensure logs are written to tmpfs (avoiding writable container)
+    rm -rf /opt/juliadepot/logs
+    ln -s /dev/shm/ /opt/juliadepot/logs
+
+%environment
+
+    # Set up the environment for Julia to use the custom depot path
+    export LC_ALL=C
+    export JULIA_DEPOT_PATH="/opt/juliadepot"
+    export PATH="/usr/local/julia/bin:$PATH"
+
+%runscript
+
+    # Runs when executing the container
+    echo "Container was created $NOW"
+    echo "Arguments received: $*"
+    echo pwd
+    exec echo "$@"
+    julia "$@"
+
+%labels
+
+    Author nina.omejc@ijs.si
+    Version v0.1
+
+%help
+
+    singularity exec julia_simple.sif julia --project=/opt/TestContainerPackage.jl
+

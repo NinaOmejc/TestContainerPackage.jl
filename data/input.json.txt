@@ -1,0 +1,5 @@
+{
+  "name": "Singularity",
+  "version": 1.0
+}
+
