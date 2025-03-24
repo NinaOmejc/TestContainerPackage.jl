@@ -1,0 +1,4 @@
+name = "TestContainerPackage"
+uuid = "6d423502-1c99-4af4-a9b7-3e23246c1fbf"
+authors = ["NinaOmejc <nina.omejc@gmail.com>"]
+version = "0.1.0"
