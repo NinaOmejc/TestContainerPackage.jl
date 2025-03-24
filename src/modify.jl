@@ -1,8 +1,8 @@
 using JSON
 
 
-function modify_json(input_filename=normpath(joinpath(@__DIR__, "..", "data", "input.json")), 
-                     output_filename=normpath(joinpath(@__DIR__, "..", "data", "output.json")))
+function modify_json(;input_filename::String="/home/data/input.json", 
+                     output_filename::String="/home/data/output.json")
     
     input_data = JSON.parsefile(input_filename)
     println("Read from JSON:", input_data)
