@@ -1,7 +1,9 @@
 using JSON
 
 
-function modify_json(input_filename="input.json", output_filename="output.json")
+function modify_json(input_filename=normpath(joinpath(@__DIR__, "..", "data", "input.json")), 
+                     output_filename=normpath(joinpath(@__DIR__, "..", "data", "output.json")))
+    
     input_data = JSON.parsefile(input_filename)
     println("Read from JSON:", input_data)
     output_data = Dict("message" => "Hello from Julia!", "original" => input_data)
